@@ -1,0 +1,30 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port:
+
+camunda:
+  client:
+    mode: selfmanaged
+    auth:
+      method: oidc
+      client-id:
+      client-secret:
+      token-url:  # sma tenant ID
+      audience:  # orchestration client id
+      scope: # orchestration client id + scope (ex: /.default)
+    prefer-rest-over-grpc: false
+    grpc-address:
+    rest-address:
+
+  connector:
+    secret-provider:
+      console:
+        enabled: false
+      environment:
+        enabled: true
+        prefix: SECRETS_
+    polling:
+      enabled: false

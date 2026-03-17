@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.5</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <version>3.5.0</version>
+    <relativePath/>
   </parent>
 
   <name>dynamics-connector</name>
@@ -20,8 +20,12 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <template.class.path>de.ilume.dynamicsConnector.DynamicsConnectorFunction</template.class.path>
-    <!-- connector SDK version -->
-    <version.connectors>8.5.0</version.connectors>
+    <version.connectors>8.8.2</version.connectors>
+    <version.camunda>8.8.2</version.camunda>
+    <version.assertj>3.27.7</version.assertj>
+    <version.junit-jupiter>6.0.0</version.junit-jupiter>
+    <version.awaitility>4.2.0</version.awaitility>
+    <version.mockito>5.19.0</version.mockito>
   </properties>
 
   <dependencies>
@@ -36,7 +40,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Basic Dependency needed for development -->
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-core</artifactId>
@@ -44,7 +47,21 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- For Connector validation -->
+    <!-- Element template generator annotations (compile-time only) -->
+    <dependency>
+      <groupId>io.camunda.connector</groupId>
+      <artifactId>element-template-generator-core</artifactId>
+      <version>${version.connectors}</version>
+    </dependency>
+
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>io.camunda.connector</groupId>
+      <artifactId>connector-test</artifactId>
+      <version>${version.connectors}</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-validation</artifactId>
@@ -52,7 +69,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--Logback-Logging-->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${version.assertj}</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>ch.qos.logback.contrib</groupId>
       <artifactId>logback-json-classic</artifactId>
@@ -62,12 +85,13 @@
     <dependency>
       <groupId>com.azure.spring</groupId>
       <artifactId>spring-cloud-azure-starter</artifactId>
-      <version>5.12.0</version>
+      <version>6.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-reactive-httpclient</artifactId>
+      <version>4.1.4</version>
     </dependency>
 
     <dependency>
@@ -86,14 +110,6 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
-    <!-- Element template generator annotations (compile-time only) -->
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>element-template-generator-core</artifactId>
-      <version>${version.connectors}</version>
-      <optional>true</optional>
-    </dependency>
-
     <!-- for testing connectors locally in bundle with runtime -->
     <dependency>
       <groupId>io.camunda.connector</groupId>
@@ -103,12 +119,39 @@
     </dependency>
 
     <dependency>
+      <groupId>io.camunda.connector</groupId>
+      <artifactId>connector-runtime-test</artifactId>
+      <version>${version.connectors}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.camunda</groupId>
+      <artifactId>camunda-process-test-spring</artifactId>
+      <version>${version.camunda}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>ch.qos.logback.contrib</groupId>
       <artifactId>logback-jackson</artifactId>
       <version>0.1.5</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -116,7 +159,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -126,7 +168,8 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.11.0-M2</version>
+      <version>${version.junit-jupiter}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -145,11 +188,13 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp</artifactId>
+      <version>4.12.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>mockwebserver</artifactId>
+      <version>4.12.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -157,6 +202,23 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.2.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
         <plugin>
           <groupId>io.camunda.connector</groupId>
           <artifactId>element-template-generator-maven-plugin</artifactId>
@@ -183,6 +245,21 @@
       <plugin>
         <groupId>io.camunda.connector</groupId>
         <artifactId>element-template-generator-maven-plugin</artifactId>
+      </plugin>
+
+      <!-- mandatory for the Maven compiler to run Lombok's annotation processor -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.32</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -226,5 +303,38 @@
       <url>https://artifacts.camunda.com/artifactory/connectors-snapshots/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <profiles>
+    <!-- Default profile: run as Spring Boot app locally -->
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <excludes>
+              <!-- Exclude SPI file to prevent duplicate registration -->
+              <exclude>META-INF/services/io.camunda.connector.api.outbound.OutboundConnectorFunction</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+
+    <!-- JAR deployment profile: include SPI file for custom_connectors folder -->
+    <profile>
+      <id>deployment</id>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

@@ -11,6 +11,7 @@ access token before using it to send a chosen HTTP request to the Dataverse Web 
 - [Connector Structure](#connector-structure)
 - [Authentification Details](#authentification-details)
 - [HTTP Endpoint](#HTTP-endpoint)
+- [Running the Connector](#running-the-connector)
 
 ## Prerequisites
 - A Dataverse environment with a table.
@@ -18,6 +19,14 @@ access token before using it to send a chosen HTTP request to the Dataverse Web 
 - The authentification details of your Dataverse environment.
 - A local (self-managed) Camunda installation or setup of Camunda SaaS.
 - A BPMN diagram detailing the process that uses this connector.
+
+Further information about Connectors and how to set up Camunda 8 can be found through the following links:
+
+Camunda 8 Setup: https://developers.camunda.com/install-camunda-8/  
+Connector Setup: https://docs.camunda.io/docs/self-managed/components/connectors/connectors-configuration/
+
+
+
 
 ## Connector Structure
 The connector template contains two major areas that are essential for its functionality:
@@ -57,3 +66,7 @@ which operation is chosen:
 | Fields           | Specify through a list of Strings (as a FEEL expression) which fields should be listed inside the returned record of your request. | ex.: `["name", "accountid", "versionnumber"]`                                                                                    |
 | Account ID       | Specify which entry you want to address with your request by stating its account ID.                                               | ex.: `d3eb7f1d-f25a-ef11-zfe4-00224876f3fk`                                                                                      | 
 | Request Body     | Specify additional data you want to add to your request (as a FEEL expression).                                                    | Example of a body for a PATCH request to update the `name` value of an existing table entry: `{"name":"Updated Sample Account"}` |
+
+
+## Running the Connector
+To run the Connector locally simply execute the class `LocalConnectorRuntime` inside your chosen IDE. Otherwise, you can build a .jar file by using the command `mvn package -P deployment`.

@@ -10,14 +10,9 @@ import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
 import de.ilume.dynamicsConnector.dto.DynamicsConnectorRequest;
 import de.ilume.dynamicsConnector.service.GenerateTokenService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -40,14 +35,22 @@ import org.springframework.stereotype.Component;
         },
         inputDataClass = DynamicsConnectorRequest.class)
 @CommonsLog(topic = "jsonEncoderLogger")
-@AllArgsConstructor(onConstructor_ = {@Autowired})
-@NoArgsConstructor
-@Component
 public class DynamicsConnectorFunction implements OutboundConnectorFunction {
 
     private GenerateTokenService generateTokenService;
     private ExecuteRequestService executeRequestService;
 
+    // Required by SPI loader for JAR deployment
+    public DynamicsConnectorFunction() {
+    }
+
+    // Used by Spring in local/ConnectorConfig mode
+    public DynamicsConnectorFunction(
+            GenerateTokenService generateTokenService,
+            ExecuteRequestService executeRequestService) {
+        this.generateTokenService = generateTokenService;
+        this.executeRequestService = executeRequestService;
+    }
     /**
      * Automatically executed when connector is triggered.
      * Binds Workflow variables present in parameter to {@link DynamicsConnectorRequest} Object
@@ -78,7 +81,7 @@ public class DynamicsConnectorFunction implements OutboundConnectorFunction {
                 connectorRequest.authentication().client(),
                 connectorRequest.authentication().secret(),
                 connectorRequest.authentication().scope(),
-        connectorRequest.authentication().access()).block();
+                connectorRequest.authentication().access()).block();
 
         ObjectMapper objectMapper = new ObjectMapper();
         StringBuilder requestUrl = new StringBuilder("");
@@ -88,7 +91,9 @@ public class DynamicsConnectorFunction implements OutboundConnectorFunction {
         String result;
 
         if(connectorRequest.target().equals("account")){
-            requestUrl = new StringBuilder("https://camunda.crm16.dynamics.com/api/data/v9.2/accounts");
+            // Enter your Request URL here. Usually: {Dynamics 365 URL}/api/data/{API Version}
+            // Example for Dynamics 365 URL: https://{your-org-name}.crm.dynamics.com
+            requestUrl = new StringBuilder("https://orgbd3eb4d8.crm16.dynamics.com/api/data/v9.2/accounts");
         }
 
         switch(connectorRequest.operation()) {
@@ -97,6 +102,10 @@ public class DynamicsConnectorFunction implements OutboundConnectorFunction {
 
                 log.info("requestUrl: " + requestUrl);
                 log.info("Request Body: " + result);
+
+                if (result == null) {
+                    throw new RuntimeException("Empty response from Dynamics API for URL: " + requestUrl);
+                }
                 return objectMapper.readValue(result, new TypeReference<Map<String, Object>>() {
                 });
 
