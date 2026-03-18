@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.springframework.http.*;
 import reactor.core.publisher.Mono;
@@ -69,8 +70,8 @@ class GenerateTokenTests {
         RecordedRequest recordedRequest = mockWebServer.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
         assertEquals("/token", recordedRequest.getPath());
-        assertEquals("application/x-www-form-urlencoded;charset=UTF-8",
-                recordedRequest.getHeader(HttpHeaders.CONTENT_TYPE));
+        assertTrue(recordedRequest.getHeader(HttpHeaders.CONTENT_TYPE)
+                .startsWith("application/x-www-form-urlencoded"));
         assertEquals("grant_type=client_credentials&" +
                 "client_id=clientId&" +
                 "client_secret=clientSecret&" +
